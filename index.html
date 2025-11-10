@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        div {
+            width: 600px; 
+            height: 600px; 
+            border: 1px solid black; 
+            overflow: hidden;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+</head>
+<body>
+    <div id="GameDiv">
+        <canvas id='GameCanvas' width="1200" height="1200"></canvas>
+    </div>
+</body>
+<script>
+const canvas = document.getElementById("GameCanvas");
+const context = canvas.getContext('2d');
+const GameDiv = document.getElementById('GameDiv').getBoundingClientRect();
+
+var grd = context.createLinearGradient(0, 0, 1200, 0);
+grd.addColorStop(0, 'red');
+grd.addColorStop(1, 'white');
+
+context.fillStyle = grd;
+context.fillRect(0, 300, 1000, 600);
+
+let StartX, StartY;
+canvas.addEventListener("mousedown", (e) => {
+    StartX = e.clientX - GameDiv.left;
+    StartY = e.clientY - GameDiv.top;
+});
+
+canvas.addEventListener("mouseup", (e) => {
+    context.beginPath();
+    RectWidth = e.clientX - GameDiv.left - StartX;
+    RectHeight = e.clientY - GameDiv.top - StartY;
+    console.log((RectHeight * RectWidth / 5000));
+    context.rect(StartX, StartY, RectWidth, RectHeight);
+    context.stroke();
+    
+});
+</script>
+</html>
