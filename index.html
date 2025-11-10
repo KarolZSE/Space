@@ -18,10 +18,10 @@
 
         #Player {
             position: absolute;
-            width: 60px;
-            height: 60px;
+            width: 15px;
+            height: 15px;
             border: 1px solid black;
-            top: 100px;
+            top: 90px;
         }
 
         #GameCanvas {
@@ -36,20 +36,50 @@
         <div id="Player"></div>
     </div>
 </body>
+<script src="https://cdn.jsdelivr.net/npm/noisejs@2.1.0/index.js"></script>
 <script>
 const canvas = document.getElementById("GameCanvas");
 const context = canvas.getContext('2d');
 const GameDiv = document.getElementById('GameDiv').getBoundingClientRect();
 
-var grd = context.createLinearGradient(0, 0, 1200, 0);
-grd.addColorStop(0, 'red');
-grd.addColorStop(1, 'white');
+    const noise = new Noise(Math.random());
 
-context.fillStyle = grd;
-context.fillRect(0, 300, 1000, 600);
+    const stoneColor = '#888888';
+    const ironColor = '#6AACD5';
 
+function generateTerrain() {
+    const imageData = context.createImageData(canvas.width, canvas.height);
+
+    for (let y = 0; y < canvas.height; y++) {
+        for (let x = 0; x < canvas.width; x++) {
+            const base = noise.perlin2(x * 0.05, y * 0.05);
+
+            let color = stoneColor;
+
+            const ironNoise = noise.perlin2(x * 0.03, y * 0.03);
+            if (ironNoise > 0.55) color = ironColor;
+
+            const index = (y * canvas.width + x) * 4;
+            const rgb = hexToRgb(color);
+            imageData.data[index] = rgb.r;
+            imageData.data[index + 1] = rgb.g;
+            imageData.data[index + 2] = rgb.b;
+            imageData.data[index + 3] = 255;
+        }
+    }
+
+    context.putImageData(imageData, 0, 100);
+}
+
+    function hexToRgb(hex) {
+        hex = hex.replace('#', '');
+        return { r: parseInt(hex.substring(0, 2), 16), g: parseInt(hex.substring(2, 4), 16), b: parseInt(hex.substring(4, 6), 16)};
+    }
+
+    generateTerrain();
 let StartX, StartY;
 canvas.addEventListener("mousedown", (e) => {
+    e.preventDefault();
     StartX = e.clientX - GameDiv.left;
     StartY = e.clientY - GameDiv.top;
 });
@@ -122,7 +152,7 @@ window.addEventListener("keydown", (e) => {
         const b = pixel[i + 2];
 
         console.log(r, g, b);
-        if (r > 10 && b < 200) {
+        if (r > 130 && b < 200) {
             Player.style.top = OldY + 'px';
             Player.style.left = OldX + 'px'; 
             break;
