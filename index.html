@@ -27,7 +27,14 @@
                 </div>
                 <div id="Player"></div>
                 <div id="SpaceShip"></div>
-                <div id="Building"></div>
+                <div id="Building">
+                    <div></div>
+                    <div draggable="true" id="CoalFurnance">1</div>
+                    <div draggable="true" id="Wind">2</div>
+                    <div draggable="true" id="Solar">3</div>
+                    <div draggable="true" id="Oil">4</div>
+                    <div draggable="true" id="Rafinery">5</div>
+                </div>
             </div>
         </td>
         <td>
@@ -78,8 +85,9 @@ const GameDiv = document.getElementById('GameDiv').getBoundingClientRect();
     const noise = new Noise(Math.random());
 
     const stoneColor = '#888888';
-    const ironColor = '#6AACD5';
+    const waterColor = '#6AACD5';
     const coalColor = '#000000';
+    const AluminiumColor = '#6495ed';
 
 function generateTerrain() {
     const imageData = context.createImageData(canvas.width, canvas.height);
@@ -94,8 +102,11 @@ function generateTerrain() {
             if (coalNoise > 0.6) color = coalColor;
 
 
-            const ironNoise = noise.perlin2(x * 0.01, y * 0.01);
-            if (ironNoise > 0.3) color = ironColor;
+            const waterNoise = noise.perlin2(x * 0.01, y * 0.01);
+            if (waterNoise > 0.3) color = waterColor;
+
+            const AluminiumNoise = noise.perlin2(x * 0.03, y * 0.03);
+            if (AluminiumNoise > 0.7) color = AluminiumColor;
 
             const index = (y * canvas.width + x) * 4;
             const rgb = hexToRgb(color);

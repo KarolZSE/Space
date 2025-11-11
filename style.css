@@ -1,90 +1,109 @@
-        #GameDiv > div {
-            position: absolute;
-        }
+#GameDiv > div {
+    position: absolute;
+}
 
-        #GameDiv {
-            position: relative;
-            width: 600px; 
-            height: 600px; 
-            border: 1px solid black; 
-            overflow: hidden;
-            background-color: rgb(16, 16, 63);
-        }
+#GameDiv {
+    position: relative;
+    width: 600px; 
+    height: 600px; 
+    border: 1px solid black; 
+    overflow: hidden;
+    background-color: rgb(16, 16, 63);
+}
 
-        #Req {
-            height: 600px;
-            width: 300px;
-            border: 1px solid black;
-            color: black;
-            text-align: center;
-        }
+#Req {
+    height: 600px;
+    width: 300px;
+    border: 1px solid black;
+    color: black;
+    text-align: center;
+}
 
-        #Player {
-            position: absolute;
-            width: 15px;
-            height: 15px;
-            border: 1px solid black;
-            top: 100px;
-            left: 50%;
-            transform: translate(-50%);
-        }
+#Player {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    border: 1px solid black;
+    top: 100px;
+    left: 50%;
+    transform: translate(-50%);
+}
 
-        #SpaceShip {
-            width: 64px;
-            height: 64px;
-            background-image: url('SpaceCraft.png');
-            background-size: cover;
-            top: 45px;
-            left: 50%;
-            transform: translate(-50%);
-            image-rendering: pixelated;
-        }
+#SpaceShip {
+    width: 64px;
+    height: 64px;
+    background-image: url('SpaceCraft.png');
+    background-size: cover;
+    top: 45px;
+    left: 50%;
+    transform: translate(-50%);
+    image-rendering: pixelated;
+}
 
-        #GameCanvas {
-            position: absolute;
-            left: 0;
-        }
+#GameCanvas {
+    position: absolute;
+    left: 0;
+}
 
-        #Building {
-            position: absolute;
-            bottom: 5px;
-            left: 5px;
-            width: 60px;
-            height: 60px;
-            border: 1px solid black;
-            background: url('Hammer.png');
-            background-size: 120px 120px;
-            image-rendering: pixelated;
-        }
+#Building {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    width: 60px;
+    height: 60px;
+    border: 1px solid black;
+    background: url('Hammer.png');
+    background-size: 60px 60px;
+    background-repeat: no-repeat;
+    image-rendering: pixelated;
+    display: grid;
+    grid-template-columns: repeat(6, auto);
+}
 
-        #Ore {
-            top: 5px;
-            left: 5px; 
-            width: 60px;
-            height: 60px;
-            border: 1px solid black;
-            font-size: 12px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: white;
-        }
+#Building div {
+    display: none;
+}
 
-        .OreIcon {
-            display: inline-block;
-            width: 25px;
-            height: 25px;
-            background: url('Ores.png');
-            background-size: 100px 25px;
-            vertical-align: middle;
-            image-rendering: pixelated;
-        }
+#Ore {
+    top: 5px;
+    left: 5px; 
+    width: 60px;
+    height: 60px;
+    border: 1px solid black;
+    font-size: 12px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+}
 
-        #Resources {
-            height: 600px;
-            width: 300px;
-            border: 1px solid black;
-            color: black;
-            text-align: center;
-        }
+.OreIcon {
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    background: url('Ores.png');
+    background-size: 100px 25px;
+    vertical-align: middle;
+    image-rendering: pixelated;
+}
+
+#Resources {
+    height: 600px;
+    width: 300px;
+    border: 1px solid black;
+    color: black;
+    text-align: center;
+}
+
+#Solar {
+    background: url('solarPanel.png');
+    background-size: cover;
+    image-rendering: pixelated;
+}
+
+#CoalFurnance {
+    background: url('furnace.png');
+    background-size: 1440px 60px;
+    image-rendering: pixelated;
+}

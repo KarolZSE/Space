@@ -1,6 +1,30 @@
 const Building = document.getElementById('Building');
+const BuildingChildren = document.querySelectorAll('#Building div');
+let buildON = false;
 Building.addEventListener('click', () => {
-    Building.style.width = '240px';
+    if (!buildON) {
+        buildON = true;
+        Building.style.width = '360px';
+        BuildingChildren.forEach(e => {
+            e.style.display = 'inline';
+        }); 
+    } else {
+        buildON = false;
+        Building.style.width = '60px';
+        BuildingChildren.forEach(e => {
+            e.style.display = 'none';
+        }); 
+    }
+});
+
+BuildingChildren.forEach(e => {
+    e.addEventListener('dragstart', (f) => {
+        f.dataTransfer.setData('text/plain', 'object');
+    });
+
+    e.addEventListener("click", () => {
+        console.log('ok');
+    });
 });
 
 const OreType = document.getElementById('OreType');
@@ -62,11 +86,13 @@ function CheckForOres() {
         pixel[i] = 200;
         pixel[i + 1] = 200;
         pixel[i + 2] = 200;
+
+        context.putImageData(imageData, x, y);
         console.log(r, g, b);
         if (r > 130 && b < 200) {
             
-        } else if (r < 20) {
-            if (OreTypeValue && OreTypeValue != 'Coal') return;
+        } else if (r == 0 && g == 0 && b == 0) {
+            if (OreTypeValue && OreTypeValue != 'Coal') continue;
             OreTypeValue = 'Coal';
             OreType.textContent = 'Coal';
             OreFull.textContent = ++OreAmout;
@@ -76,7 +102,7 @@ function CheckForOres() {
                 OreFull.textContent = 'Full!';
             }
         } else if (r == 106 && g == 172 && b == 213) {
-            if (OreTypeValue && OreTypeValue != 'Water') return;
+            if (OreTypeValue && OreTypeValue != 'Water') continue;
             OreTypeValue = 'Water';
             OreType.textContent = 'Water';
             OreFull.textContent = ++OreAmout;
@@ -85,10 +111,19 @@ function CheckForOres() {
                 OreAmout = 100;
                 OreFull.textContent = 'Full!';
             }
+        } else if (r == 100 && g == 149 && b == 237) {
+            console.log('bruh');
+            if (OreTypeValue && OreTypeValue != 'Aluminum') continue;
+            OreTypeValue = 'Aluminum';
+            OreType.textContent = 'Aluminum';
+            OreFull.textContent = ++OreAmout;
+            OreIcon.style.backgroundPosition = `0px 0px`;
+            if (OreAmout >= 100) {
+                OreAmout = 100;
+                OreFull.textContent = 'Full!';
+            }
         }
     }
-
-    context.putImageData(imageData, x, y);
 
     if (PlayerRect.left >= GameDiv.width + GameDiv.left) {
         if (MultiWarpProtection) return;
