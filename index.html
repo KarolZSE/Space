@@ -16,7 +16,17 @@
             transform: translate(-50%, -50%);
         }
 
-        #Player {
+        #Req {
+            height: 600px;
+            width: 200px;
+            position: absolute;
+            left: 150px;
+            border: 1px solid black;
+            color: black;
+            text-align: center;
+        }
+
+        #Player, #SpaceShip {
             position: absolute;
             width: 15px;
             height: 15px;
@@ -24,19 +34,42 @@
             top: 90px;
         }
 
+        #Player { 
+            top: 10px;
+        }
+
         #GameCanvas {
             position: absolute;
             left: 0;
         }
+
+        #Building {
+            position: absolute;
+            top: 560px;
+            left: 40px;
+            width: 60px;
+            height: 60px;
+            border: 1px solid black;
+            background: url('Hammer.png');
+            background-size: 120px 120px;
+            image-rendering: pixelated;
+        }
+
     </style>
 </head>
 <body>
+    <div id="Req">
+        <h1>Requierments</h1>
+    </div>
     <div id="GameDiv">
         <canvas id='GameCanvas' width="1200" height="1200"></canvas>
         <div id="Player"></div>
+        <div id="SpaceShip"></div>
+        <div id="Building"></div>
     </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/noisejs@2.1.0/index.js"></script>
+<script src="code.js"></script>
 <script>
 const canvas = document.getElementById("GameCanvas");
 const context = canvas.getContext('2d');
@@ -46,6 +79,7 @@ const GameDiv = document.getElementById('GameDiv').getBoundingClientRect();
 
     const stoneColor = '#888888';
     const ironColor = '#6AACD5';
+    const coalColor = '#000000';
 
 function generateTerrain() {
     const imageData = context.createImageData(canvas.width, canvas.height);
@@ -56,8 +90,12 @@ function generateTerrain() {
 
             let color = stoneColor;
 
-            const ironNoise = noise.perlin2(x * 0.03, y * 0.03);
-            if (ironNoise > 0.55) color = ironColor;
+            const coalNoise = noise.perlin2(x * 0.05, y * 0.05);
+            if (coalNoise > 0.6) color = coalColor;
+
+
+            const ironNoise = noise.perlin2(x * 0.01, y * 0.01);
+            if (ironNoise > 0.3) color = ironColor;
 
             const index = (y * canvas.width + x) * 4;
             const rgb = hexToRgb(color);
@@ -86,6 +124,7 @@ canvas.addEventListener("mousedown", (e) => {
 
 canvas.addEventListener("mouseup", (e) => {
     context.beginPath();
+    // if (Pla)
     RectWidth = e.clientX - GameDiv.left - StartX;
     RectHeight = e.clientY - GameDiv.top - StartY;
     console.log(Math.abs(RectHeight * RectWidth / 5000));
