@@ -4,80 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <style>
-        div {
-            width: 600px; 
-            height: 600px; 
-            border: 1px solid black; 
-            overflow: hidden;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        #Req {
-            height: 600px;
-            width: 200px;
-            position: absolute;
-            left: 150px;
-            border: 1px solid black;
-            color: black;
-            text-align: center;
-        }
-
-        #Player, #SpaceShip {
-            position: absolute;
-            width: 15px;
-            height: 15px;
-            border: 1px solid black;
-            top: 90px;
-        }
-
-        #Player { 
-            top: 10px;
-        }
-
-        #GameCanvas {
-            position: absolute;
-            left: 0;
-        }
-
-        #Building {
-            position: absolute;
-            top: 560px;
-            left: 40px;
-            width: 60px;
-            height: 60px;
-            border: 1px solid black;
-            background: url('Hammer.png');
-            background-size: 120px 120px;
-            image-rendering: pixelated;
-        }
-
-        #OreType {
-            top: 40px;
-            left: 40px; 
-            width: 60px;
-            height: 60px;
-            border: 1px solid black;
-        }
-    </style>
+    <link rel="Stylesheet" href="style.css">
 </head>
 <body>
-    <div id="Req">
-        <h1>Requierments</h1>
-    </div>
-    <div id="GameDiv">
-        <canvas id='GameCanvas' width="1200" height="1200"></canvas>
-        <div id="OreType">
-            <span>Coal</span><br>
-            <span>10</span>% full
-            <img src=""></div>
-        <div id="Player"></div>
-        <div id="SpaceShip"></div>
-        <div id="Building"></div>
-    </div>
+<table style="position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);">
+    <tr>
+        <td>
+            <div id="Req">
+                <h1>Requierments</h1>
+            </div>
+        </td>
+        <td>
+            <div id="GameDiv">
+                <canvas id='GameCanvas' width="1200" height="1200"></canvas>
+                <div id="Ore">
+                    <span id="OreType">Water</span><br>
+                    <span id="OreFull">10</span>% full
+                    <div id="OreIcon"></div>
+                </div>
+                <div id="Player"></div>
+                <div id="SpaceShip"></div>
+                <div id="Building"></div>
+            </div>
+        </td>
+        <td>
+            <div id="Resources">
+                <h1>Resources</h1>
+            </div>
+        </td>
+    </tr>
+</table>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/noisejs@2.1.0/index.js"></script>
 <script src="code.js"></script>

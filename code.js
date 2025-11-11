@@ -1,8 +1,12 @@
 const Building = document.getElementById('Building');
 Building.addEventListener('click', () => {
     Building.style.width = '240px';
-    Building.style.left = '130px';
 });
+
+const OreType = document.getElementById('OreType');
+const OreFull = document.getElementById('OreFull');
+const OreIcon = document.getElementById('OreIcon');
+let OreAmout = 0;
 
 let OldX, OldY, MultiWarpProtection;
 const Player = document.getElementById('Player');
@@ -19,10 +23,16 @@ window.addEventListener("keydown", (e) => {
         Player.style.left = Player.offsetLeft - 3 + 'px';
     } else if (e.key == 'd') {
         Player.style.left = Player.offsetLeft + 3 + 'px';
-    } else if (e.key == 'e') {
-        
     }
 
+    if (isColliding(Player, document.getElementById('SpaceShip'))) {
+        OreType.textContent = 'Nothing';
+        OreFull.textContent = 0;
+        OreIcon.style.backgroundPosition = `0px 0px`;
+        if (OreTypeValue == 'Coal') {
+            OreAmout
+        };
+    };
     CheckForOres();
 });
 
@@ -45,11 +55,22 @@ function CheckForOres() {
         const g = pixel[i + 1];
         const b = pixel[i + 2];
 
+        pixel[i] = 200;
+        pixel[i + 1] = 200;
+        pixel[i + 2] = 200;
         console.log(r, g, b);
         if (r > 130 && b < 200) {
-            pixel[i] = 200;
-            pixel[i + 1] = 200;
-            pixel[i + 2] = 200;
+            
+        } else if (r < 20) {
+            if (OreTypeValue) return;
+            OreTypeValue = 'Coal';
+            OreType.textContent = 'Coal';
+            OreFull.textContent = ++OreAmout;
+            OreIcon.style.backgroundPosition = `-${25}px 0px`;
+            if (OreAmout >= 100) {
+                OreAmout = 100;
+                OreFull.textContent = 'Full!';
+            }
         }
     }
 
@@ -70,10 +91,22 @@ function CheckForOres() {
         if (MultiWarpProtection) return;
         MultiWarpProtection = true;
         console.log('ok2');
-        Player.style.left = canvas.offsetLeft - PlayerRect.width + 'px';
-        canvas.style.left = (canvas.offsetLeft + canvas.offsetWidth - 300) + 'px';
+        Player.style.left = canvas.offsetLeft + canvas.offsetWidth - PlayerRect.width + 'px';
+        canvas.style.left = (canvas.offsetLeft + 900) + 'px';
         setTimeout(() => {
             MultiWarpProtection = false;    
         }, 3000);
     };
 }
+
+function isColliding(e1, e2) {
+    const rect1 = e1.getBoundingClientRect()
+    const rect2 = e2.getBoundingClientRect();
+
+        return !(
+            rect1.top > rect2.bottom || 
+            rect1.bottom < rect2.top || 
+            rect1.left > rect2.right || 
+            rect1.right < rect2.left
+        );
+} 
