@@ -22,8 +22,8 @@
                 <canvas id='GameCanvas' width="1200" height="1200"></canvas>
                 <div id="Ore">
                     <span id="OreType">Water</span><br>
-                    <span id="OreFull">10</span>% full
-                    <div id="OreIcon"></div>
+                    <span><span id="OreFull">10</span>% full</span>
+                    <div id="OreIcon" class="OreIcon"></div>
                 </div>
                 <div id="Player"></div>
                 <div id="SpaceShip"></div>
@@ -33,6 +33,36 @@
         <td>
             <div id="Resources">
                 <h1>Resources</h1>
+                <div style="display: grid; grid-template-columns: repeat(3, auto); gap: 5px;">
+                    <div class="OreClass">Coal
+                        <br><span>
+                            <span id="CoalN">0</span>
+                            <div class="OreIcon" style="background-position: -25px 0px;"></div>
+                        </span>
+                    </div>
+                    <div class="OreClass">Oil
+                        <br><span>
+                            <span id="OilN">0</span>
+                            <div class="OreIcon" style="background-position: 0px 0px;"></div></div>
+                        </span>
+                    <div class="OreClass">Aluminum 
+                        <br><span>
+                            <span id="AluminumN">0</span><div class="OreIcon" style="background-position: 0px 0px;"></div></div>
+                        </span>
+                    <div class="OreClass">Water 
+                        <br><span>                        
+                            <span id="WaterN">0</span>
+                            <div class="OreIcon" style="background-position: -50px 0px;"></div>
+                        </span>
+                    </div>
+                    <div class="OreClass">Energy 
+                        <br><span>
+                            <span id="EnergyN">0</span>
+                            <div class="OreIcon" style="background-position: 0px 0px;"></div>
+                        </span>
+                    </div>
+                </div>
+                <h1>Events</h1>
             </div>
         </td>
     </tr>

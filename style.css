@@ -1,4 +1,4 @@
-        #GameDiv div {
+        #GameDiv > div {
             position: absolute;
         }
 
@@ -24,7 +24,7 @@
             width: 15px;
             height: 15px;
             border: 1px solid black;
-            top: 60px;
+            top: 100px;
             left: 50%;
             transform: translate(-50%);
         }
@@ -37,6 +37,7 @@
             top: 45px;
             left: 50%;
             transform: translate(-50%);
+            image-rendering: pixelated;
         }
 
         #GameCanvas {
@@ -60,18 +61,24 @@
             top: 5px;
             left: 5px; 
             width: 60px;
-            height: 70px;
+            height: 60px;
             border: 1px solid black;
             font-size: 12px;
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             color: white;
         }
 
-        #OreIcon {
+        .OreIcon {
+            display: inline-block;
             width: 25px;
             height: 25px;
             background: url('Ores.png');
             background-size: 100px 25px;
+            vertical-align: middle;
+            image-rendering: pixelated;
         }
 
         #Resources {

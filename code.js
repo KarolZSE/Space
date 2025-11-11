@@ -7,6 +7,7 @@ const OreType = document.getElementById('OreType');
 const OreFull = document.getElementById('OreFull');
 const OreIcon = document.getElementById('OreIcon');
 let OreAmout = 0;
+let OreTypeValue = false;
 
 let OldX, OldY, MultiWarpProtection;
 const Player = document.getElementById('Player');
@@ -29,8 +30,11 @@ window.addEventListener("keydown", (e) => {
         OreType.textContent = 'Nothing';
         OreFull.textContent = 0;
         OreIcon.style.backgroundPosition = `0px 0px`;
-        if (OreTypeValue == 'Coal') {
-            OreAmout
+        if (OreTypeValue) {
+        const temp = document.getElementById(`${OreTypeValue}N`) 
+            temp.textContent = Number(temp.textContent) + OreAmout;
+            OreAmout = 0;
+            OreTypeValue = false;
         };
     };
     CheckForOres();
@@ -62,11 +66,21 @@ function CheckForOres() {
         if (r > 130 && b < 200) {
             
         } else if (r < 20) {
-            if (OreTypeValue) return;
+            if (OreTypeValue && OreTypeValue != 'Coal') return;
             OreTypeValue = 'Coal';
             OreType.textContent = 'Coal';
             OreFull.textContent = ++OreAmout;
-            OreIcon.style.backgroundPosition = `-${25}px 0px`;
+            OreIcon.style.backgroundPosition = `-25px 0px`;
+            if (OreAmout >= 100) {
+                OreAmout = 100;
+                OreFull.textContent = 'Full!';
+            }
+        } else if (r == 106 && g == 172 && b == 213) {
+            if (OreTypeValue && OreTypeValue != 'Water') return;
+            OreTypeValue = 'Water';
+            OreType.textContent = 'Water';
+            OreFull.textContent = ++OreAmout;
+            OreIcon.style.backgroundPosition = `-50px 0px`;
             if (OreAmout >= 100) {
                 OreAmout = 100;
                 OreFull.textContent = 'Full!';
