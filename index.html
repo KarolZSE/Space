@@ -55,6 +55,13 @@
             image-rendering: pixelated;
         }
 
+        #OreType {
+            top: 40px;
+            left: 40px; 
+            width: 60px;
+            height: 60px;
+            border: 1px solid black;
+        }
     </style>
 </head>
 <body>
@@ -63,6 +70,10 @@
     </div>
     <div id="GameDiv">
         <canvas id='GameCanvas' width="1200" height="1200"></canvas>
+        <div id="OreType">
+            <span>Coal</span><br>
+            <span>10</span>% full
+            <img src=""></div>
         <div id="Player"></div>
         <div id="SpaceShip"></div>
         <div id="Building"></div>
@@ -136,67 +147,6 @@ canvas.addEventListener("mouseup", (e) => {
         context.fillRect(...thisRect);
     }, 1000);
     
-});
-
-let OldX, OldY, MultiWarpProtection;
-const Player = document.getElementById('Player');
-window.addEventListener("keydown", (e) => {
-
-    OldX = Player.offsetLeft;
-    OldY = Player.offsetTop;
-
-    if (e.key == 'w') {
-        Player.style.top = Player.offsetTop - 3 + 'px';
-    } else if (e.key == 's') {
-        Player.style.top = Player.offsetTop + 3 + 'px';
-    } else if (e.key == 'a') {
-        Player.style.left = Player.offsetLeft - 3 + 'px';
-    } else if (e.key == 'd') {
-        Player.style.left = Player.offsetLeft + 3 + 'px';
-    };
-
-    const rect = canvas.getBoundingClientRect();
-    const PlayerRect = Player.getBoundingClientRect();
-
-    const width = Math.min(5, canvas.width - Math.max(0, (PlayerRect.left - rect.left) - 2));
-    const height = Math.min(5, canvas.height - Math.max(0, (PlayerRect.top + PlayerRect.height - rect.top) - 2));
-
-    const pixel = context.getImageData(Math.max(0, (PlayerRect.left - rect.left) - 2), Math.max(0, (PlayerRect.top + PlayerRect.height - rect.top) - 2), width, height).data;
-
-    if (PlayerRect.left >= GameDiv.width + GameDiv.left) {
-        if (MultiWarpProtection) return;
-        MultiWarpProtection = true;
-        console.log('ok1');
-        Player.style.left = canvas.offsetLeft + PlayerRect.width + 'px';
-        canvas.style.left = (canvas.offsetLeft - 900) + 'px';
-        setTimeout(() => {
-            MultiWarpProtection = false;    
-        }, 3000);
-    };
-
-    if (PlayerRect.left <= GameDiv.left) {
-        if (MultiWarpProtection) return;
-        MultiWarpProtection = true;
-        console.log('ok2');
-        Player.style.left = canvas.offsetLeft - PlayerRect.width + 'px';
-        canvas.style.left = (canvas.offsetLeft + canvas.offsetWidth - 300) + 'px';
-        setTimeout(() => {
-            MultiWarpProtection = false;    
-        }, 3000);
-    };
-
-    for (let i = 0; i < pixel.length; i += 4) {
-        const r = pixel[i];
-        const g = pixel[i + 1];
-        const b = pixel[i + 2];
-
-        console.log(r, g, b);
-        if (r > 130 && b < 200) {
-            Player.style.top = OldY + 'px';
-            Player.style.left = OldX + 'px'; 
-            break;
-        }
-    }
 });
 </script>
 </html>
