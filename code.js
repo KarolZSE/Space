@@ -17,15 +17,43 @@ Building.addEventListener('click', () => {
     }
 });
 
+const DropLine = document.getElementById('dropped');
+const droppedDivs = document.getElementById('dropped');
+
 BuildingChildren.forEach(e => {
     e.addEventListener('dragstart', (f) => {
-        f.dataTransfer.setData('text/plain', 'object');
+        f.dataTransfer.setData('id', e.id);
     });
 
     e.addEventListener("click", () => {
         console.log('ok');
     });
 });
+
+    DropLine.addEventListener('dragover', (f) => {
+        f.preventDefault();
+        DropLine.classList.add('dragover');
+    });
+
+    DropLine.addEventListener('dragleave', () => {
+        DropLine.classList.remove('dragover');
+    });
+
+    DropLine.addEventListener('drop', (f) => {
+        f.preventDefault();
+        DropLine.classList.remove('dragover');
+
+        const id = f.dataTransfer.getData('id');
+        const draggedElement = document.getElementById(id);
+
+        const style = getComputedStyle(draggedElement);
+
+        const div = document.createElement('div');
+
+        div.style.background = style.style.background;
+        
+        droppedDivs.appendChild(div);
+    })
 
 const OreType = document.getElementById('OreType');
 const OreFull = document.getElementById('OreFull');
