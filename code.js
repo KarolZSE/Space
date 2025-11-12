@@ -1,3 +1,75 @@
+const canvas = document.getElementById("GameCanvas");
+const context = canvas.getContext('2d');
+const GameDiv = document.getElementById('GameDiv').getBoundingClientRect();
+
+    context.imageSmoothingEnabled = false;
+    const noise = new Noise(Math.random());
+
+    const stoneColor = '#888888';
+    const waterColor = '#6AACD5';
+    const coalColor = '#000000';
+    const AluminiumColor = '#6495ed';
+
+function generateTerrain() {
+    const imageData = context.createImageData(canvas.width, canvas.height);
+
+    for (let y = 0; y < canvas.height; y++) {
+        for (let x = 0; x < canvas.width; x++) {
+            const base = noise.perlin2(x * 0.05, y * 0.05);
+
+            let color = stoneColor;
+
+            const coalNoise = noise.perlin2(x * 0.05, y * 0.05);
+            if (coalNoise > 0.6) color = coalColor;
+
+
+            const waterNoise = noise.perlin2(x * 0.01, y * 0.01);
+            if (waterNoise > 0.3) color = waterColor;
+
+            const AluminiumNoise = noise.perlin2(x * 0.03, y * 0.03);
+            if (AluminiumNoise > 0.7) color = AluminiumColor;
+
+            const index = (y * canvas.width + x) * 4;
+            const rgb = hexToRgb(color);
+            imageData.data[index] = rgb.r;
+            imageData.data[index + 1] = rgb.g;
+            imageData.data[index + 2] = rgb.b;
+            imageData.data[index + 3] = 255;
+        }
+    }
+
+    context.putImageData(imageData, 0, 100);
+}
+
+    function hexToRgb(hex) {
+        hex = hex.replace('#', '');
+        return { r: parseInt(hex.substring(0, 2), 16), g: parseInt(hex.substring(2, 4), 16), b: parseInt(hex.substring(4, 6), 16)};
+    }
+
+    generateTerrain();
+let StartX, StartY;
+canvas.addEventListener("mousedown", (e) => {
+    e.preventDefault();
+    StartX = e.clientX - GameDiv.left;
+    StartY = e.clientY - GameDiv.top;
+});
+
+canvas.addEventListener("mouseup", (e) => {
+    context.beginPath();
+    // if (Pla)
+    RectWidth = e.clientX - GameDiv.left - StartX;
+    RectHeight = e.clientY - GameDiv.top - StartY;
+    console.log(Math.abs(RectHeight * RectWidth / 5000));
+    let thisRect = [StartX, StartY, RectWidth, RectHeight];
+    context.rect(...thisRect);
+    context.stroke();
+    setTimeout(() => {
+        context.fillStyle = '#fff';
+        context.fillRect(...thisRect);
+    }, 1000);
+    
+});
+
 const Building = document.getElementById('Building');
 const BuildingChildren = document.querySelectorAll('#Building div');
 let buildON = false;
@@ -17,12 +89,10 @@ Building.addEventListener('click', () => {
     }
 });
 
-const DropLine = document.getElementById('dropped');
-const droppedDivs = document.getElementById('dropped');
 
 BuildingChildren.forEach(e => {
-    e.addEventListener('dragstart', (f) => {
-        f.dataTransfer.setData('id', e.id);
+    e.addEventListener('dragstart', (ev) => {
+        ev.dataTransfer.setData('text/plain', e.id);
     });
 
     e.addEventListener("click", () => {
@@ -30,17 +100,35 @@ BuildingChildren.forEach(e => {
     });
 });
 
-    DropLine.addEventListener('dragover', (f) => {
-        f.preventDefault();
-        DropLine.classList.add('dragover');
+    canvas.addEventListener('dragover', (ev) => {
+        ev.preventDefault();
+        
     });
 
+    /*
     DropLine.addEventListener('dragleave', () => {
         DropLine.classList.remove('dragover');
     });
+    */
 
-    DropLine.addEventListener('drop', (f) => {
-        f.preventDefault();
+    canvas.addEventListener('drop', (ev) => {
+        ev.preventDefault();
+
+        const id = ev.dataTransfer.getData('text/plain');
+        const draggedElement = document.getElementById(id);
+
+        const rect = canvas.getBoundingClientRect();
+        const dropX = ev.clientX - rect.left;
+
+        const style = getComputedStyle(draggedElement);
+
+        const build = new Image();
+        build.crossOrigin = 'anonymous';
+        build.src = style.backgroundImage && style.backgroundImage.match(/url\((?:'|")?(.*?)(?:'|")?\)/)[1];
+        build.onload = () => {
+            context.drawImage(build, 0, 0, 60, 60, dropX, 60, 60, 60);
+        };
+        /*
         DropLine.classList.remove('dragover');
 
         const id = f.dataTransfer.getData('id');
@@ -53,6 +141,7 @@ BuildingChildren.forEach(e => {
         div.style.background = style.style.background;
         
         droppedDivs.appendChild(div);
+        */
     })
 
 const OreType = document.getElementById('OreType');

@@ -19,9 +19,6 @@
         </td>
         <td>
             <div id="GameDiv">
-                <div id="DropLine">
-                    <div id="dropped"></div>
-                </div>
                 <canvas id='GameCanvas' width="1200" height="1200"></canvas>
                 <div id="Ore">
                     <span id="OreType">Water</span><br>
@@ -80,76 +77,4 @@
 </body>
 <script src="https://cdn.jsdelivr.net/npm/noisejs@2.1.0/index.js"></script>
 <script src="code.js"></script>
-<script>
-const canvas = document.getElementById("GameCanvas");
-const context = canvas.getContext('2d');
-const GameDiv = document.getElementById('GameDiv').getBoundingClientRect();
-
-    const noise = new Noise(Math.random());
-
-    const stoneColor = '#888888';
-    const waterColor = '#6AACD5';
-    const coalColor = '#000000';
-    const AluminiumColor = '#6495ed';
-
-function generateTerrain() {
-    const imageData = context.createImageData(canvas.width, canvas.height);
-
-    for (let y = 0; y < canvas.height; y++) {
-        for (let x = 0; x < canvas.width; x++) {
-            const base = noise.perlin2(x * 0.05, y * 0.05);
-
-            let color = stoneColor;
-
-            const coalNoise = noise.perlin2(x * 0.05, y * 0.05);
-            if (coalNoise > 0.6) color = coalColor;
-
-
-            const waterNoise = noise.perlin2(x * 0.01, y * 0.01);
-            if (waterNoise > 0.3) color = waterColor;
-
-            const AluminiumNoise = noise.perlin2(x * 0.03, y * 0.03);
-            if (AluminiumNoise > 0.7) color = AluminiumColor;
-
-            const index = (y * canvas.width + x) * 4;
-            const rgb = hexToRgb(color);
-            imageData.data[index] = rgb.r;
-            imageData.data[index + 1] = rgb.g;
-            imageData.data[index + 2] = rgb.b;
-            imageData.data[index + 3] = 255;
-        }
-    }
-
-    context.putImageData(imageData, 0, 100);
-}
-
-    function hexToRgb(hex) {
-        hex = hex.replace('#', '');
-        return { r: parseInt(hex.substring(0, 2), 16), g: parseInt(hex.substring(2, 4), 16), b: parseInt(hex.substring(4, 6), 16)};
-    }
-
-    generateTerrain();
-let StartX, StartY;
-canvas.addEventListener("mousedown", (e) => {
-    e.preventDefault();
-    StartX = e.clientX - GameDiv.left;
-    StartY = e.clientY - GameDiv.top;
-});
-
-canvas.addEventListener("mouseup", (e) => {
-    context.beginPath();
-    // if (Pla)
-    RectWidth = e.clientX - GameDiv.left - StartX;
-    RectHeight = e.clientY - GameDiv.top - StartY;
-    console.log(Math.abs(RectHeight * RectWidth / 5000));
-    let thisRect = [StartX, StartY, RectWidth, RectHeight];
-    context.rect(...thisRect);
-    context.stroke();
-    setTimeout(() => {
-        context.fillStyle = '#fff';
-        context.fillRect(...thisRect);
-    }, 1000);
-    
-});
-</script>
 </html>
