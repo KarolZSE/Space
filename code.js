@@ -89,10 +89,40 @@ Building.addEventListener('click', () => {
     }
 });
 
+/*
+                    <div draggable="true" id="Coal">1</div>
+                    <div draggable="true" id="Wind">2</div>
+                    <div draggable="true" id="Solar">3</div>
+                    <div draggable="true" id="Oil">4</div>
+                    <div draggable="true" id="Raf">5</div>
+*/
+const ReqText = document.getElementById('ReqText');
+const Gains = document.getElementById('Gains');
+const ReqWork = document.getElementById('ReqWork');
 
 BuildingChildren.forEach(e => {
     e.addEventListener('dragstart', (ev) => {
         ev.dataTransfer.setData('text/plain', e.id);
+        if (e.id == "Coal") {
+            ReqText.textContent = 'None';
+            ReqWork.textContent = '1 Coal/s';
+            Gains.textContent = '1 Energy/s';
+        } else if (e.id == "Wind") {
+            ReqText.textContent = "30 Aluminum";
+            ReqWork.textContent = 'Needs wind';
+            Gains.textContent = '2 Energy/s';
+        } else if (e.id == "Solar") {
+            ReqText.textContent = "30 Aluminum";
+            ReqWork.textContent = 'Works only in the day';
+            Gains.textContent = '2 Energy/s';
+        }
+        
+    });
+
+    e.addEventListener('dragend', () => {
+        ReqText.textContent = '---';
+        Gains.textContent = '---';
+        ReqWork.textContent = '---';
     });
 
     e.addEventListener("click", () => {
@@ -105,16 +135,36 @@ BuildingChildren.forEach(e => {
         
     });
 
-    /*
-    DropLine.addEventListener('dragleave', () => {
-        DropLine.classList.remove('dragover');
-    });
-    */
-
     canvas.addEventListener('drop', (ev) => {
         ev.preventDefault();
 
         const id = ev.dataTransfer.getData('text/plain');
+
+        if (id == "Coal") {
+            setInterval(() => {
+                const temp = document.getElementById(`${id}N`);
+                if (Number(temp.textContent) <= 0) return;
+                temp.textContent = Number(temp.textContent) - 1;
+                const temp2 = document.getElementById('EnergyN');
+                temp2.textContent = Number(temp2.textContent) + 1;
+            }, 1000);
+        } else if (id == "Wind") {
+            const temp = document.getElementById('AluminumN');
+            if (Number(temp.textContent) < 30) return;
+            temp.textContent = Number(temp.textContent) - 30;
+            setInterval(() => {
+                const temp2 = document.getElementById('EnergyN');
+                temp2.textContent = Number(temp2.textContent) + 2;
+            }, 1000);
+        } else if (id == "Solar") {
+            const temp = document.getElementById('AluminumN');
+            if (Number(temp.textContent) < 30) return;
+            temp.textContent = Number(temp.textContent) - 30;
+            setInterval(() => {
+                const temp2 = document.getElementById('EnergyN');
+                temp2.textContent = Number(temp2.textContent) + 2;
+            }, 1000);
+        }
         const draggedElement = document.getElementById(id);
 
         const rect = canvas.getBoundingClientRect();
@@ -128,21 +178,7 @@ BuildingChildren.forEach(e => {
         build.onload = () => {
             context.drawImage(build, 0, 0, 60, 60, dropX, 60, 60, 60);
         };
-        /*
-        DropLine.classList.remove('dragover');
-
-        const id = f.dataTransfer.getData('id');
-        const draggedElement = document.getElementById(id);
-
-        const style = getComputedStyle(draggedElement);
-
-        const div = document.createElement('div');
-
-        div.style.background = style.style.background;
-        
-        droppedDivs.appendChild(div);
-        */
-    })
+    });
 
 const OreType = document.getElementById('OreType');
 const OreFull = document.getElementById('OreFull');
@@ -153,6 +189,13 @@ let OreTypeValue = false;
 let OldX, OldY, MultiWarpProtection;
 const Player = document.getElementById('Player');
 window.addEventListener("keydown", (e) => {
+    const water = document.getElementById('WaterN');
+    if (OreType.textContent == 'Water' && OreAmout > 0) {
+        OreFull.textContent = --OreAmout;
+    } else {
+        if (Number(water.textContent) <= 0) return;
+        water.textContent = Number(water.textContent) - 1;   
+    }
 
     OldX = Player.offsetLeft;
     OldY = Player.offsetTop;

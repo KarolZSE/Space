@@ -102,10 +102,16 @@
     image-rendering: pixelated;
 }
 
-#CoalFurnance {
+#Coal {
     background: url('furnace.png');
     background-size: 1440px 60px;
     background-repeat: no-repeat;
+    image-rendering: pixelated;
+}
+
+#Wind {
+    background: url('wind.png');
+    background-size: 60px 60px;
     image-rendering: pixelated;
 }
 
