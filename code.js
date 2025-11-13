@@ -9,6 +9,7 @@ const GameDiv = document.getElementById('GameDiv').getBoundingClientRect();
     const waterColor = '#6AACD5';
     const coalColor = '#000000';
     const AluminiumColor = '#ffffff';
+    const OilColor = '#694705';
 
 function generateTerrain() {
     const imageData = context.createImageData(canvas.width, canvas.height);
@@ -28,6 +29,9 @@ function generateTerrain() {
 
             const AluminiumNoise = noise.perlin2(x * 0.03, y * 0.03);
             if (AluminiumNoise > 0.7) color = AluminiumColor;
+
+            const OilNoise = noise.perlin2(x * 0.02, y * 0.02);
+            if (OilNoise > 0.7) color = OilColor;
 
             const index = (y * canvas.width + x) * 4;
             const rgb = hexToRgb(color);
@@ -139,6 +143,7 @@ BuildingChildren.forEach(e => {
         
     });
 
+    const Events = document.getElementById('Events');
     canvas.addEventListener('drop', (ev) => {
         ev.preventDefault();
 
@@ -146,16 +151,25 @@ BuildingChildren.forEach(e => {
         let YAlign = 0;
 
         if (id == "Coal") {
+            const templi = document.createElement('li');
+            Events.appendChild(templi);
             setInterval(() => {
                 const temp = document.getElementById(`${id}N`);
-                if (Number(temp.textContent) <= 0) return;
+                if (Number(temp.textContent) <= 0) {
+                    templi.textContent = '1x Coal Power Plant - No coal to process';
+                    return;
+                };
                 temp.textContent = Number(temp.textContent) - 1;
+                templi.textContent = '1x Coal Power Plant - Generates 1 Energy/s, Costs 1 Coal/s';              
                 const temp2 = document.getElementById('EnergyN');
                 temp2.textContent = Number(temp2.textContent) + 1;
             }, 1000);
         } else if (id == "Wind") {
             const temp = document.getElementById('AluminumN');
             if (Number(temp.textContent) < 30) return;
+            const templi = document.createElement('li');
+            templi.textContent = '1x Wind Turbine - Generates 2 Energy/s'
+            Events.appendChild(templi);
             temp.textContent = Number(temp.textContent) - 30;
             YAlign = 7;
             setInterval(() => {
@@ -173,11 +187,17 @@ BuildingChildren.forEach(e => {
             }, 1000);
         } else if (id == "Raf") {
             YAlign = -15;
+            const templi = document.createElement('li');
+            Events.appendChild(templi);
             setInterval(() => {
                 const temp = document.getElementById(`BauxiteN`);
                 const temp2 = document.getElementById('EnergyN');
-                if (Number(temp.textContent) < 2 || Number(temp2.textContent) < 5) return;
+                if (Number(temp.textContent) < 2 || Number(temp2.textContent) < 5) {
+                    templi.textContent = '1x Rafinery - No Bauxite to process';
+                    return;
+                };
                 const temp3 = document.getElementById('AluminumN');
+                templi.textContent = '1x Rafinery - Generates 1 Aluminum/s, Costs 2 Bauxite/s and 5 Energy/s';
                 temp.textContent = Number(temp.textContent) - 2;
                 temp2.textContent = Number(temp2.textContent) - 5;
                 temp3.textContent = Number(temp3.textContent) + 1;
@@ -296,12 +316,21 @@ function CheckForOres() {
                 OreFull.textContent = 'Full!';
             }
         } else if (r == 255 && g == 255 && b == 255) {
-            console.log('bruh');
             if (OreTypeValue && OreTypeValue != 'Bauxite') continue;
             OreTypeValue = 'Bauxite';
             OreType.textContent = 'Bauxite';
             OreFull.textContent = ++OreAmout;
             OreIcon.style.backgroundPosition = `0px 0px`;
+            if (OreAmout >= 100) {
+                OreAmout = 100;
+                OreFull.textContent = 'Full!';
+            }
+        }  else if (r == 105 && g == 71 && b == 5) {
+            if (OreTypeValue && OreTypeValue != 'Oil') continue;
+            OreTypeValue = 'Oil';
+            OreType.textContent = 'Oil';
+            OreFull.textContent = ++OreAmout;
+            OreIcon.style.backgroundPosition = `-150px 0px`;
             if (OreAmout >= 100) {
                 OreAmout = 100;
                 OreFull.textContent = 'Full!';
