@@ -11,29 +11,31 @@ const GameDiv = document.getElementById('GameDiv').getBoundingClientRect();
     const AluminiumColor = '#ffffff';
     const OilColor = '#694705';
 
-function generateTerrain() {
-    const imageData = context.createImageData(canvas.width, canvas.height);
+function generateTerrain(chunk = 0) {
+    const imageData = context.createImageData(600, 600);
 
-    for (let y = 0; y < canvas.height; y++) {
-        for (let x = 0; x < canvas.width; x++) {
-            const base = noise.perlin2(x * 0.05, y * 0.05);
+    for (let y = 0; y < 600; y++) {
+        for (let x = 0; x < 600; x++) {
+
+            const wx = x + chunk * 600;
+            const base = noise.perlin2(wx * 0.05, y * 0.05);
 
             let color = stoneColor;
 
-            const coalNoise = noise.perlin2(x * 0.05, y * 0.05);
+            const coalNoise = noise.perlin2(wx * 0.05, y * 0.05);
             if (coalNoise > 0.6) color = coalColor;
 
 
-            const waterNoise = noise.perlin2(x * 0.01, y * 0.01);
+            const waterNoise = noise.perlin2(wx * 0.01, y * 0.01);
             if (waterNoise > 0.3) color = waterColor;
 
-            const AluminiumNoise = noise.perlin2(x * 0.03, y * 0.03);
+            const AluminiumNoise = noise.perlin2(wx * 0.03, y * 0.03);
             if (AluminiumNoise > 0.7) color = AluminiumColor;
 
-            const OilNoise = noise.perlin2(x * 0.02, y * 0.02);
+            const OilNoise = noise.perlin2(wx * 0.02, y * 0.02);
             if (OilNoise > 0.7) color = OilColor;
 
-            const index = (y * canvas.width + x) * 4;
+            const index = (y * 600 + x) * 4;
             const rgb = hexToRgb(color);
             imageData.data[index] = rgb.r;
             imageData.data[index + 1] = rgb.g;
@@ -42,7 +44,7 @@ function generateTerrain() {
         }
     }
 
-    context.putImageData(imageData, 0, 100);
+    context.putImageData(imageData, chunk * 600, 100);
 }
 
     function hexToRgb(hex) {
@@ -93,13 +95,6 @@ Building.addEventListener('click', () => {
     }
 });
 
-/*
-                    <div draggable="true" id="Coal">1</div>
-                    <div draggable="true" id="Wind">2</div>
-                    <div draggable="true" id="Solar">3</div>
-                    <div draggable="true" id="Oil">4</div>
-                    <div draggable="true" id="Raf">5</div>
-*/
 const ReqText = document.getElementById('ReqText');
 const Gains = document.getElementById('Gains');
 const ReqWork = document.getElementById('ReqWork');
@@ -143,7 +138,10 @@ BuildingChildren.forEach(e => {
         
     });
 
-    const Events = document.getElementById('Events');
+    let CoalCount = 0;
+    let WindCount = 0;
+    let SolarCount = 0;
+    let RefCount = 0;
     canvas.addEventListener('drop', (ev) => {
         ev.preventDefault();
 
@@ -151,25 +149,24 @@ BuildingChildren.forEach(e => {
         let YAlign = 0;
 
         if (id == "Coal") {
-            const templi = document.createElement('li');
-            Events.appendChild(templi);
+            CoalCount++;
+            const tempE = document.getElementById(`${id}E`);
             setInterval(() => {
                 const temp = document.getElementById(`${id}N`);
                 if (Number(temp.textContent) <= 0) {
-                    templi.textContent = '1x Coal Power Plant - No coal to process';
+                    tempE.textContent = `${CoalCount}x Coal Power Plant - No coal to process`;
                     return;
                 };
                 temp.textContent = Number(temp.textContent) - 1;
-                templi.textContent = '1x Coal Power Plant - Generates 1 Energy/s, Costs 1 Coal/s';              
+                tempE.textContent = `${CoalCount}x Coal Power Plant - Generates ${CoalCount} Energy/s, Costs ${CoalCount} Coal/s`;              
                 const temp2 = document.getElementById('EnergyN');
                 temp2.textContent = Number(temp2.textContent) + 1;
             }, 1000);
         } else if (id == "Wind") {
+            WindCount++;
             const temp = document.getElementById('AluminumN');
             if (Number(temp.textContent) < 30) return;
-            const templi = document.createElement('li');
-            templi.textContent = '1x Wind Turbine - Generates 2 Energy/s'
-            Events.appendChild(templi);
+            document.getElementById(`${id}E`).textContent = `${WindCount}x Wind Turbine - Generates ${WindCount * 2} Energy/s`
             temp.textContent = Number(temp.textContent) - 30;
             YAlign = 7;
             setInterval(() => {
@@ -177,8 +174,10 @@ BuildingChildren.forEach(e => {
                 temp2.textContent = Number(temp2.textContent) + 2;
             }, 1000);
         } else if (id == "Solar") {
+            SolarCount++;
             const temp = document.getElementById('AluminumN');
             if (Number(temp.textContent) < 30) return;
+            document.getElementById(`${id}E`).textContent = `${SolarCount}x Wind Turbine - Generates ${SolarCount * 2} Energy/s`
             temp.textContent = Number(temp.textContent) - 30;
             YAlign = -5;
             setInterval(() => {
@@ -186,18 +185,18 @@ BuildingChildren.forEach(e => {
                 temp2.textContent = Number(temp2.textContent) + 2;
             }, 1000);
         } else if (id == "Raf") {
+            RefCount++;
+            const tempE = document.getElementById(`${id}E`);
             YAlign = -15;
-            const templi = document.createElement('li');
-            Events.appendChild(templi);
             setInterval(() => {
                 const temp = document.getElementById(`BauxiteN`);
                 const temp2 = document.getElementById('EnergyN');
                 if (Number(temp.textContent) < 2 || Number(temp2.textContent) < 5) {
-                    templi.textContent = '1x Rafinery - No Bauxite to process';
+                    tempE.textContent = `${RefCount}x Rafinery - No Bauxite or Energy to process`;
                     return;
                 };
                 const temp3 = document.getElementById('AluminumN');
-                templi.textContent = '1x Rafinery - Generates 1 Aluminum/s, Costs 2 Bauxite/s and 5 Energy/s';
+                tempE.textContent = `${RefCount}x Rafinery - Generates ${RefCount} Aluminum/s, Costs ${RefCount * 2} Bauxite/s and ${RefCount * 5} Energy/s`;
                 temp.textContent = Number(temp.textContent) - 2;
                 temp2.textContent = Number(temp2.textContent) - 5;
                 temp3.textContent = Number(temp3.textContent) + 1;
@@ -267,6 +266,10 @@ window.addEventListener("keydown", (e) => {
     };
     CheckForOres();
 });
+
+let chunkX = 0;
+let chunkXArray = [0];
+let chunkY = 0;
 
 function CheckForOres() {
     const rect = canvas.getBoundingClientRect();
@@ -341,9 +344,13 @@ function CheckForOres() {
     if (PlayerRect.left >= GameDiv.width + GameDiv.left) {
         if (MultiWarpProtection) return;
         MultiWarpProtection = true;
-        console.log('ok1');
-        Player.style.left = canvas.offsetLeft + PlayerRect.width + 'px';
-        canvas.style.left = (canvas.offsetLeft - 900) + 'px';
+        Player.style.left = '0px';
+        canvas.style.left = (canvas.offsetLeft - 600) + 'px';
+        chunkX++;
+        if (!chunkXArray.includes(chunkX)) {
+            generateTerrain(chunkX);
+            chunkXArray.push(chunkX);
+        }
         setTimeout(() => {
             MultiWarpProtection = false;    
         }, 3000);
@@ -353,8 +360,13 @@ function CheckForOres() {
         if (MultiWarpProtection) return;
         MultiWarpProtection = true;
         console.log('ok2');
-        Player.style.left = canvas.offsetLeft + canvas.offsetWidth - PlayerRect.width + 'px';
-        canvas.style.left = (canvas.offsetLeft + 900) + 'px';
+        Player.style.left = GameDiv.width + 'px';
+        canvas.style.left = (canvas.offsetLeft + 600) + 'px';
+        chunkX--;
+        if (!chunkXArray.includes(chunkX)) {
+            generateTerrain(chunkX);
+            chunkXArray.push(chunkX);
+        }
         setTimeout(() => {
             MultiWarpProtection = false;    
         }, 3000);
