@@ -8,7 +8,7 @@ const GameDiv = document.getElementById('GameDiv').getBoundingClientRect();
     const stoneColor = '#888888';
     const waterColor = '#6AACD5';
     const coalColor = '#000000';
-    const AluminiumColor = '#6495ed';
+    const AluminiumColor = '#ffffff';
 
 function generateTerrain() {
     const imageData = context.createImageData(canvas.width, canvas.height);
@@ -115,6 +115,10 @@ BuildingChildren.forEach(e => {
             ReqText.textContent = "30 Aluminum";
             ReqWork.textContent = 'Works only in the day';
             Gains.textContent = '2 Energy/s';
+        } else if (e.id == "Raf") {
+            ReqText.textContent = 'None';
+            ReqWork.textContent = '2 Bauxite/s , 5 Energy/s';
+            Gains.textContent = '1 Aluminum/s';
         }
         
     });
@@ -139,6 +143,7 @@ BuildingChildren.forEach(e => {
         ev.preventDefault();
 
         const id = ev.dataTransfer.getData('text/plain');
+        let YAlign = 0;
 
         if (id == "Coal") {
             setInterval(() => {
@@ -152,6 +157,7 @@ BuildingChildren.forEach(e => {
             const temp = document.getElementById('AluminumN');
             if (Number(temp.textContent) < 30) return;
             temp.textContent = Number(temp.textContent) - 30;
+            YAlign = 7;
             setInterval(() => {
                 const temp2 = document.getElementById('EnergyN');
                 temp2.textContent = Number(temp2.textContent) + 2;
@@ -160,9 +166,21 @@ BuildingChildren.forEach(e => {
             const temp = document.getElementById('AluminumN');
             if (Number(temp.textContent) < 30) return;
             temp.textContent = Number(temp.textContent) - 30;
+            YAlign = -5;
             setInterval(() => {
                 const temp2 = document.getElementById('EnergyN');
                 temp2.textContent = Number(temp2.textContent) + 2;
+            }, 1000);
+        } else if (id == "Raf") {
+            YAlign = -15;
+            setInterval(() => {
+                const temp = document.getElementById(`BauxiteN`);
+                const temp2 = document.getElementById('EnergyN');
+                if (Number(temp.textContent) < 2 || Number(temp2.textContent) < 5) return;
+                const temp3 = document.getElementById('AluminumN');
+                temp.textContent = Number(temp.textContent) - 2;
+                temp2.textContent = Number(temp2.textContent) - 5;
+                temp3.textContent = Number(temp3.textContent) + 1;
             }, 1000);
         }
         const draggedElement = document.getElementById(id);
@@ -176,7 +194,7 @@ BuildingChildren.forEach(e => {
         build.crossOrigin = 'anonymous';
         build.src = style.backgroundImage && style.backgroundImage.match(/url\((?:'|")?(.*?)(?:'|")?\)/)[1];
         build.onload = () => {
-            context.drawImage(build, 0, 0, 60, 60, dropX, 60, 60, 60);
+            context.drawImage(build, 0, YAlign, 60, 60, dropX, 60, 60, 60);
         };
     });
 
@@ -190,10 +208,16 @@ let OldX, OldY, MultiWarpProtection;
 const Player = document.getElementById('Player');
 window.addEventListener("keydown", (e) => {
     const water = document.getElementById('WaterN');
-    if (OreType.textContent == 'Water' && OreAmout > 0) {
-        OreFull.textContent = --OreAmout;
-    } else {
+    if (OreType.textContent == 'Water') {
+        if (OreAmout > 0) {
+            OreFull.textContent = --OreAmout; 
+        } else {
+            OreTypeValue = false;
+            OreType.textContent = 'Nothing';
+        } 
+    } else {  
         if (Number(water.textContent) <= 0) return;
+        
         water.textContent = Number(water.textContent) - 1;   
     }
 
@@ -271,11 +295,11 @@ function CheckForOres() {
                 OreAmout = 100;
                 OreFull.textContent = 'Full!';
             }
-        } else if (r == 100 && g == 149 && b == 237) {
+        } else if (r == 255 && g == 255 && b == 255) {
             console.log('bruh');
-            if (OreTypeValue && OreTypeValue != 'Aluminum') continue;
-            OreTypeValue = 'Aluminum';
-            OreType.textContent = 'Aluminum';
+            if (OreTypeValue && OreTypeValue != 'Bauxite') continue;
+            OreTypeValue = 'Bauxite';
+            OreType.textContent = 'Bauxite';
             OreFull.textContent = ++OreAmout;
             OreIcon.style.backgroundPosition = `0px 0px`;
             if (OreAmout >= 100) {

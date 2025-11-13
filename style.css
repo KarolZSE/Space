@@ -83,7 +83,7 @@
     width: 25px;
     height: 25px;
     background: url('Ores.png');
-    background-size: 100px 25px;
+    background-size: 175px 25px;
     vertical-align: middle;
     image-rendering: pixelated;
 }
@@ -111,6 +111,12 @@
 
 #Wind {
     background: url('wind.png');
+    background-size: 60px 60px;
+    image-rendering: pixelated;
+}
+
+#Raf {
+    background: url('Anvil.png');
     background-size: 60px 60px;
     image-rendering: pixelated;
 }
