@@ -83,7 +83,7 @@ let buildON = false;
 Building.addEventListener('click', () => {
     if (!buildON) {
         buildON = true;
-        Building.style.width = '360px';
+        Building.style.width = '300px';
         BuildingChildren.forEach(e => {
             e.style.display = 'inline';
         }); 

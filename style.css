@@ -84,7 +84,7 @@ body {
     background-repeat: no-repeat;
     image-rendering: pixelated;
     display: grid;
-    grid-template-columns: repeat(6, auto);
+    grid-template-columns: repeat(5, auto);
 }
 
 #Building div {
