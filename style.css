@@ -17,16 +17,24 @@
     border: 1px solid black;
     color: black;
     text-align: center;
+    position: relative;
 }
 
 #Player {
     position: absolute;
     width: 15px;
-    height: 15px;
-    border: 1px solid black;
+    height: 25.54px;
+    background: url('drill.png');
+    background-size: 15px 25.54px;
     top: 100px;
     left: 50%;
     transform: translate(-50%);
+}
+
+.square {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
 }
 
 #SpaceShip {

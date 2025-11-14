@@ -223,8 +223,13 @@ const OreIcon = document.getElementById('OreIcon');
 let OreAmout = 0;
 let OreTypeValue = false;
 
+
+
 let OldX, OldY, MultiWarpProtection;
 const Player = document.getElementById('Player');
+let px = Player.offsetLeft;
+let py = Player.offsetTop;
+
 window.addEventListener("keydown", (e) => {
     const water = document.getElementById('WaterN');
     if (OreType.textContent == 'Water') {
@@ -244,14 +249,21 @@ window.addEventListener("keydown", (e) => {
     OldY = Player.offsetTop;
 
     if (e.key == 'w') {
-        Player.style.top = Player.offsetTop - 3 + 'px';
+        py = Math.max(Player.offsetTop - 3, 98);
+        Player.style.transform = 'translate(-50%) rotate(180deg)';
     } else if (e.key == 's') {
-        Player.style.top = Player.offsetTop + 3 + 'px';
+        py += 3;
+        Player.style.transform = 'translate(-50%) rotate(0deg)';
     } else if (e.key == 'a') {
-        Player.style.left = Player.offsetLeft - 3 + 'px';
+        px -= 3;
+        Player.style.transform = 'translate(-50%) rotate(90deg)';
     } else if (e.key == 'd') {
-        Player.style.left = Player.offsetLeft + 3 + 'px';
+        px += 3;
+        Player.style.transform = 'translate(-50%) rotate(270deg)';
     }
+
+    Player.style.left = px + 'px';
+    Player.style.top = py + 'px';
 
     if (isColliding(Player, document.getElementById('SpaceShip'))) {
         OreType.textContent = 'Nothing';
