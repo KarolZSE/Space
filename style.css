@@ -42,7 +42,7 @@
 
 #GameCanvas {
     position: absolute;
-    left: 0px;
+    left: -10000px;
 }
 
 #Building {

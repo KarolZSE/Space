@@ -44,7 +44,7 @@ function generateTerrain(chunk = 0) {
         }
     }
 
-    context.putImageData(imageData, chunk * 600, 100);
+    context.putImageData(imageData, chunk * 600 + 10000, 100);
 }
 
     function hexToRgb(hex) {
@@ -359,10 +359,10 @@ function CheckForOres() {
     if (PlayerRect.left <= GameDiv.left) {
         if (MultiWarpProtection) return;
         MultiWarpProtection = true;
-        console.log('ok2');
         Player.style.left = GameDiv.width + 'px';
         canvas.style.left = (canvas.offsetLeft + 600) + 'px';
         chunkX--;
+        console.log(chunkX);
         if (!chunkXArray.includes(chunkX)) {
             generateTerrain(chunkX);
             chunkXArray.push(chunkX);
