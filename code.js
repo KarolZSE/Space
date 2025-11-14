@@ -1,6 +1,7 @@
 const canvas = document.getElementById("GameCanvas");
 const context = canvas.getContext('2d');
 const GameDiv = document.getElementById('GameDiv').getBoundingClientRect();
+const date = Date.now();
 
     context.imageSmoothingEnabled = false;
     const noise = new Noise(Math.random());
@@ -142,6 +143,8 @@ BuildingChildren.forEach(e => {
     let WindCount = 0;
     let SolarCount = 0;
     let RefCount = 0;
+    const Aluminum = document.getElementById('AluminumN');
+    const EnergyV = document.getElementById('EnergyN');
     canvas.addEventListener('drop', (ev) => {
         ev.preventDefault();
 
@@ -159,30 +162,25 @@ BuildingChildren.forEach(e => {
                 };
                 temp.textContent = Number(temp.textContent) - 1;
                 tempE.textContent = `${CoalCount}x Coal Power Plant - Generates ${CoalCount} Energy/s, Costs ${CoalCount} Coal/s`;              
-                const temp2 = document.getElementById('EnergyN');
-                temp2.textContent = Number(temp2.textContent) + 1;
+                EnergyV.textContent = Number(EnergyV.textContent) + 1;
             }, 1000);
         } else if (id == "Wind") {
             WindCount++;
-            const temp = document.getElementById('AluminumN');
-            if (Number(temp.textContent) < 30) return;
+            if (Number(Aluminum.textContent) < 30) return;
             document.getElementById(`${id}E`).textContent = `${WindCount}x Wind Turbine - Generates ${WindCount * 2} Energy/s`
-            temp.textContent = Number(temp.textContent) - 30;
+            Aluminum.textContent = Number(Aluminum.textContent) - 30;
             YAlign = 7;
             setInterval(() => {
-                const temp2 = document.getElementById('EnergyN');
-                temp2.textContent = Number(temp2.textContent) + 2;
+                EnergyV.textContent = Number(EnergyV.textContent) + 2;
             }, 1000);
         } else if (id == "Solar") {
             SolarCount++;
-            const temp = document.getElementById('AluminumN');
-            if (Number(temp.textContent) < 30) return;
-            document.getElementById(`${id}E`).textContent = `${SolarCount}x Wind Turbine - Generates ${SolarCount * 2} Energy/s`
-            temp.textContent = Number(temp.textContent) - 30;
+            if (Number(Aluminum.textContent) < 30) return;
+            document.getElementById(`${id}E`).textContent = `${SolarCount}x Solar Farm - Generates ${SolarCount * 2} Energy/s`
+            Aluminum.textContent = Number(Aluminum.textContent) - 30;
             YAlign = -5;
             setInterval(() => {
-                const temp2 = document.getElementById('EnergyN');
-                temp2.textContent = Number(temp2.textContent) + 2;
+                EnergyV.textContent = Number(EnergyV.textContent) + 2;
             }, 1000);
         } else if (id == "Raf") {
             RefCount++;
@@ -190,16 +188,14 @@ BuildingChildren.forEach(e => {
             YAlign = -15;
             setInterval(() => {
                 const temp = document.getElementById(`BauxiteN`);
-                const temp2 = document.getElementById('EnergyN');
-                if (Number(temp.textContent) < 2 || Number(temp2.textContent) < 5) {
+                if (Number(temp.textContent) < 2 || Number(EnergyV.textContent) < 5) {
                     tempE.textContent = `${RefCount}x Rafinery - No Bauxite or Energy to process`;
                     return;
                 };
-                const temp3 = document.getElementById('AluminumN');
                 tempE.textContent = `${RefCount}x Rafinery - Generates ${RefCount} Aluminum/s, Costs ${RefCount * 2} Bauxite/s and ${RefCount * 5} Energy/s`;
                 temp.textContent = Number(temp.textContent) - 2;
-                temp2.textContent = Number(temp2.textContent) - 5;
-                temp3.textContent = Number(temp3.textContent) + 1;
+                EnergyV.textContent = Number(EnergyV.textContent) - 5;
+                Aluminum.textContent = Number(Aluminum.textContent) + 1;
             }, 1000);
         }
         const draggedElement = document.getElementById(id);
@@ -229,6 +225,7 @@ let OldX, OldY, MultiWarpProtection;
 const Player = document.getElementById('Player');
 let px = Player.offsetLeft;
 let py = Player.offsetTop;
+const Menu = document.getElementById("Menu");
 
 window.addEventListener("keydown", (e) => {
     const water = document.getElementById('WaterN');
@@ -240,8 +237,14 @@ window.addEventListener("keydown", (e) => {
             OreType.textContent = 'Nothing';
         } 
     } else {  
-        if (Number(water.textContent) <= 0) return;
-        
+        if (Number(water.textContent) <= 0) {
+            const DateNow = Math.floor((Date.now() - date) / 1000);
+            Menu.style.display = 'block';
+            Menu.innerHTML = `<h1 style="color: #af0f0f;">The drill has burned!</h1>
+            <p style="width: 80%; margin-left: auto; margin-right: auto;">Bad news! You had not mananged the water supply well enough and the drill has burned, worse news? You don't have a backup...</p>
+            <p>Your time ${Math.floor(DateNow / 60)} minutes, ${DateNow % 60} seconds!</p>`;
+            return;
+        };
         water.textContent = Number(water.textContent) - 1;   
     }
 
@@ -274,6 +277,13 @@ window.addEventListener("keydown", (e) => {
             temp.textContent = Number(temp.textContent) + OreAmout;
             OreAmout = 0;
             OreTypeValue = false;
+        };
+        if (Number(Aluminum.textContent) >= 75 && Number(document.getElementById('OilN').textContent) >= 150 && Number(EnergyV.textContent) >= 400) {
+            const DateNow = Math.floor((Date.now() - date) / 1000);
+            Menu.style.display = 'block';
+            Menu.innerHTML = `<h1 style="color: #0faf0f;">You had escaped!</h1>
+    <p style="width: 80%; margin-left: auto; margin-right: auto;">Congratulations you had repaired the rocket and flew away to new advetures!</p>
+    <p>Your time ${Math.floor(DateNow / 60)} minutes, ${DateNow % 60} seconds!</p>`;
         };
     };
     CheckForOres();
@@ -357,6 +367,7 @@ function CheckForOres() {
         if (MultiWarpProtection) return;
         MultiWarpProtection = true;
         Player.style.left = '0px';
+        px = 0;
         canvas.style.left = (canvas.offsetLeft - 600) + 'px';
         chunkX++;
         if (!chunkXArray.includes(chunkX)) {
@@ -372,6 +383,7 @@ function CheckForOres() {
         if (MultiWarpProtection) return;
         MultiWarpProtection = true;
         Player.style.left = GameDiv.width + 'px';
+        px = GameDiv.width;
         canvas.style.left = (canvas.offsetLeft + 600) + 'px';
         chunkX--;
         console.log(chunkX);
