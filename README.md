@@ -1,6 +1,5 @@
 # Stuck in space
 Captain! I have some bad news your spaceship has been damaged while we were flying and we had to make an emergency landing! I tried to fix it, but I don't have the necessary resources, please operate this drill, and bring me this resources so I can fix your ship!
-For information on how to play please visit the README. 
 
 # Gameplay
 - You move around with your drill using WASD, be careful **each move uses 1 water and if you run out the game is over!**
