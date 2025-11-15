@@ -1,4 +1,4 @@
-# Stuck 
+# Stuck in space
 Captain! I have bad news your ship has been damaged while we were travelling and we had to make an emergency landing! Please operate this drill, and bring me resources so I can fix your ship!
 
 # Gameplay
@@ -17,14 +17,16 @@ Another important part of the game is the building mechanic. You have 4 structur
 - The coal plant and the refinery don’t have an upfront cost, but they cost minerals per turn to operate.
 - The wind turbine and the solar farm have a 30 Aluminum cost at the start, but then produce free energy without any cost in minerals.
 - You can destroy a building by **right clicking** on it.
-- **Table of the structures available in the game:**
-| | Coal power plant | refinery  | wind turbine | solar farm |
-| :------------ | ------------- | ------------- | ------------: |
+- **Also here is a table of all the structures available in the game:**
+
+| | Coal power plant | refinery (the anvil)  | wind turbine | solar farm |
+| :------------ | ------------- | ------------- | ------------- | ------------: |
 | Upfront cost | None | None | 30 Aluminum | 30 Aluminum |
 | Operation cost  | 1 coal/second  | 2 Bauxite/second and 5 Energy/second | Needs wind* | Needs sun* |
 | Produces | 1 energy/second | 1 Aluminum/second | 1 energy/second | 1 energy/second |
 
-* I don't want to make the game to slow so assume the wind always blows with full power and its constantly day (you are stuck on a planet that rotates in sync with its orbit).
+* I don't want to make the game to slow so please assume the wind always blows with full power and its constantly day (you are stuck on a planet that rotates in sync with its orbit).
+  
 # How to win?
 - To win you have to collect 75 units of Aluminum, 150 units of Oil and 400 units of Energy and come close to your ship.
 
