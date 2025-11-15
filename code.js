@@ -2,6 +2,8 @@ const canvas = document.getElementById("GameCanvas");
 const context = canvas.getContext('2d');
 const GameDiv = document.getElementById('GameDiv').getBoundingClientRect();
 const date = Date.now();
+const buildings = [];
+let BuildingIDCounter = 0;
 
     context.imageSmoothingEnabled = false;
     const noise = new Noise(Math.random());
@@ -145,16 +147,24 @@ BuildingChildren.forEach(e => {
     let RefCount = 0;
     const Aluminum = document.getElementById('AluminumN');
     const EnergyV = document.getElementById('EnergyN');
+
     canvas.addEventListener('drop', (ev) => {
         ev.preventDefault();
 
         const id = ev.dataTransfer.getData('text/plain');
         let YAlign = 0;
 
+        const rect = canvas.getBoundingClientRect();
+        const dropX = ev.clientX - rect.left;
+        const buildingX = Math.floor(dropX / 60) * 60;
+        const BuildingID = BuildingIDCounter++;
+
+        let intervalID = null;
+
         if (id == "Coal") {
             CoalCount++;
             const tempE = document.getElementById(`${id}E`);
-            setInterval(() => {
+            intervalID = setInterval(() => {
                 const temp = document.getElementById(`${id}N`);
                 if (Number(temp.textContent) <= 0) {
                     tempE.textContent = `${CoalCount}x Coal Power Plant - No coal to process`;
@@ -165,28 +175,28 @@ BuildingChildren.forEach(e => {
                 EnergyV.textContent = Number(EnergyV.textContent) + 1;
             }, 1000);
         } else if (id == "Wind") {
-            WindCount++;
             if (Number(Aluminum.textContent) < 30) return;
+            WindCount++;
             document.getElementById(`${id}E`).textContent = `${WindCount}x Wind Turbine - Generates ${WindCount * 2} Energy/s`
             Aluminum.textContent = Number(Aluminum.textContent) - 30;
             YAlign = 7;
-            setInterval(() => {
+            intervalID = setInterval(() => {
                 EnergyV.textContent = Number(EnergyV.textContent) + 2;
             }, 1000);
         } else if (id == "Solar") {
-            SolarCount++;
             if (Number(Aluminum.textContent) < 30) return;
+            SolarCount++;
             document.getElementById(`${id}E`).textContent = `${SolarCount}x Solar Farm - Generates ${SolarCount * 2} Energy/s`
             Aluminum.textContent = Number(Aluminum.textContent) - 30;
             YAlign = -5;
-            setInterval(() => {
+            intervalID = setInterval(() => {
                 EnergyV.textContent = Number(EnergyV.textContent) + 2;
             }, 1000);
         } else if (id == "Raf") {
             RefCount++;
             const tempE = document.getElementById(`${id}E`);
             YAlign = -15;
-            setInterval(() => {
+            intervalID = setInterval(() => {
                 const temp = document.getElementById(`BauxiteN`);
                 if (Number(temp.textContent) < 2 || Number(EnergyV.textContent) < 5) {
                     tempE.textContent = `${RefCount}x Rafinery - No Bauxite or Energy to process`;
@@ -198,19 +208,74 @@ BuildingChildren.forEach(e => {
                 Aluminum.textContent = Number(Aluminum.textContent) + 1;
             }, 1000);
         }
+
+        const originalTerrain = context.getImageData(buildingX, 60 + YAlign, 60, 60);
+
         const draggedElement = document.getElementById(id);
-
-        const rect = canvas.getBoundingClientRect();
-        const dropX = ev.clientX - rect.left;
-
         const style = getComputedStyle(draggedElement);
 
         const build = new Image();
         build.crossOrigin = 'anonymous';
         build.src = style.backgroundImage && style.backgroundImage.match(/url\((?:'|")?(.*?)(?:'|")?\)/)[1];
         build.onload = () => {
-            context.drawImage(build, 0, YAlign, 60, 60, dropX, 60, 60, 60);
+            context.drawImage(build, 0, YAlign, 60, 60, buildingX, 60, 60, 60);
+
+            buildings.push({
+                id: BuildingID,
+                type: id,
+                x: buildingX,
+                y: 60,
+                intervalID: intervalID,
+                originalTerrain: originalTerrain
+            });
         };
+    });
+
+    canvas.addEventListener('contextmenu', (ev) => {
+        ev.preventDefault();
+
+        const rect = canvas.getBoundingClientRect();
+        const clickX = ev.clientX - rect.left;
+        const clickY = ev.clientY - rect.top;
+
+        if (clickY >= 60 && clickY <= 120) {
+            const buildingX = Math.floor(clickX / 60) * 60;
+
+            const buildingIndex = buildings.findIndex(b => b.x === buildingX && b.y === 60);
+            if (buildingIndex !== -1) {
+                const building = buildings[buildingIndex];
+
+                if (building.intervalID) {
+                    clearInterval(building.intervalID);
+                }
+
+                if (building.type == "Coal") {
+                    CoalCount--;
+                    document.getElementById(`${building.type}E`).textContent = CoalCount > 0 
+                    ? `${CoalCount}x Coal Power Plant - Generates ${CoalCount} Energy/s, Costs ${CoalCount} Coal/s`
+                    : '';
+                } else if (building.type == "Wind") {
+                    WindCount--;
+                    document.getElementById(`${building.type}E`).textContent = WindCount > 0
+                    ?  `${WindCount}x Wind Turbine - Generates ${WindCount * 2} Energy/s`
+                    : '';
+                } else if (building.type == "Solar") {
+                    SolarCount--;
+                    document.getElementById(`${building.type}E`).textContent = SolarCount > 0
+                    ?  `${SolarCount}x Solar Farm - Generates ${SolarCount * 2} Energy/s`
+                    : '';
+                } else if (building.type == "Raf") {
+                    RefCount--;
+                    document.getElementById(`${building.type}E`).textContent = RefCount > 0
+                    ? `${RefCount}x Rafinery - Generates ${RefCount} Aluminum/s, Costs ${RefCount * 2} Bauxite/s and ${RefCount * 5} Energy/s`
+                    : '';
+                }
+
+            context.putImageData(building.originalTerrain, building.x, building.y);
+
+            buildings.splice(buildingIndex, 1)
+            }
+        }
     });
 
 const OreType = document.getElementById('OreType');
@@ -241,7 +306,7 @@ window.addEventListener("keydown", (e) => {
             const DateNow = Math.floor((Date.now() - date) / 1000);
             Menu.style.display = 'block';
             Menu.innerHTML = `<h1 style="color: #af0f0f;">The drill has burned!</h1>
-            <p style="width: 80%; margin-left: auto; margin-right: auto;">Bad news! You had not mananged the water supply well enough and the drill has burned, worse news? You don't have a backup...</p>
+            <p style="width: 80%; margin-left: auto; margin-right: auto;">Bad news! You had not mananged the water supply well enough and the drill has burned out, worse news? You don't have a backup...</p>
             <p>Your time ${Math.floor(DateNow / 60)} minutes, ${DateNow % 60} seconds!</p>`;
             return;
         };
@@ -251,16 +316,16 @@ window.addEventListener("keydown", (e) => {
     OldX = Player.offsetLeft;
     OldY = Player.offsetTop;
 
-    if (e.key == 'w') {
+    if (e.key.toLowerCase() == 'w') {
         py = Math.max(Player.offsetTop - 3, 98);
         Player.style.transform = 'translate(-50%) rotate(180deg)';
-    } else if (e.key == 's') {
+    } else if (e.key.toLowerCase() == 's') {
         py += 3;
         Player.style.transform = 'translate(-50%) rotate(0deg)';
-    } else if (e.key == 'a') {
+    } else if (e.key.toLowerCase() == 'a') {
         px -= 3;
         Player.style.transform = 'translate(-50%) rotate(90deg)';
-    } else if (e.key == 'd') {
+    } else if (e.key.toLowerCase() == 'd') {
         px += 3;
         Player.style.transform = 'translate(-50%) rotate(270deg)';
     }
