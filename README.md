@@ -5,8 +5,8 @@ Captain! I have some bad news your spaceship has been damaged while we were flyi
 - You move around with your drill using WASD, be careful **each move uses 1 water and if you run out the game is over!**
 - You collect the minerals by drilling to them (you need to be on top of them), remember **you can collect only one type of mineral at the same time** (You can see how full is your pocket in the left corner of the game window).
 - To drop the minerals go near your ship, they will be instantly available for your builds and you, water is an exemption because you first use the one in your pocket (after that you wirelessly take it from the ship).
-- If there isn't any minerals in your current chunk you can go to the next one (by moving out off bounds of the canvas from the left or right), don't worry the saved in the memory so if you build something it will still remain build.
-- In the new chunks there are teleporters (only for minerals) to your original ship in the shape of the ship, you can deposit your minerals also to them.
+- If there isn't any minerals in your current chunk you can go to the next one (by moving out off bounds of the canvas from the left or right), don't worry the chunks are saved in the memory so if you build something on any chunk it will still remain build on that chunk.
+- In the new chunks there are teleporters (only for minerals) to your original ship in the shape of the ship, you can also deposit your minerals to them.
 
 # Building
 Another important part of the game is the building mechanic. You have 4 structures: the coal plant, wind turbine, solar farm and the refinery.
