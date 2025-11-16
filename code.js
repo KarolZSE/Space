@@ -56,28 +56,6 @@ function generateTerrain(chunk = 0) {
     }
 
     generateTerrain();
-let StartX, StartY;
-canvas.addEventListener("mousedown", (e) => {
-    e.preventDefault();
-    StartX = e.clientX - GameDiv.left;
-    StartY = e.clientY - GameDiv.top;
-});
-
-canvas.addEventListener("mouseup", (e) => {
-    context.beginPath();
-    // if (Pla)
-    RectWidth = e.clientX - GameDiv.left - StartX;
-    RectHeight = e.clientY - GameDiv.top - StartY;
-    console.log(Math.abs(RectHeight * RectWidth / 5000));
-    let thisRect = [StartX, StartY, RectWidth, RectHeight];
-    context.rect(...thisRect);
-    context.stroke();
-    setTimeout(() => {
-        context.fillStyle = '#fff';
-        context.fillRect(...thisRect);
-    }, 1000);
-    
-});
 
 const Building = document.getElementById('Building');
 const BuildingChildren = document.querySelectorAll('#Building div');
